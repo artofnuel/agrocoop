@@ -1,12 +1,12 @@
-import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma"; // Ensure this path is correct
+import { PrismaClient } from '@prisma/client';
 
-export async function GET() {
+const prisma = new PrismaClient();
+
+export async function GET(req: Request) {
   try {
     const farmers = await prisma.user.findMany();
-    return NextResponse.json(farmers);
+    return new Response(JSON.stringify(farmers), { status: 200 });
   } catch (error) {
-    console.error("Error fetching farmers:", error);
-    return NextResponse.json({ error: "Failed to fetch farmers" }, { status: 500 });
+    return new Response("Error fetching farmers", { status: 500 });
   }
 }
