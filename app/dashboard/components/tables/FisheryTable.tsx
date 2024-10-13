@@ -7,7 +7,7 @@ type Fishery = {
   numberOfPonds: number;
   numberOfFishesPurchased: number;
   costOfInvestment: number;
-  incomeOfSales: number;
+  amountFromSales: number;
 };
 
 const FisheryTable = () => {
