@@ -1,14 +1,32 @@
-import React from "react";
-import prisma from "@/lib/prisma";
+"use client";
+import React, { useEffect, useState } from "react";
 
-const FarmerTable = async () => {
-  const entries = await prisma.user.findMany();
+const FarmerTable = () => {
+  const [farmers, setFarmers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFarmers = async () => {
+      try {
+        const response = await fetch("/api/farmers");
+        const data = await response.json();
+        setFarmers(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching farmers:", error);
+        setLoading(false);
+      }
+    };
+    fetchFarmers();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <main className="w-full h-full container mx-auto">
       <h1 className="text-2xl font-bold mb-4">Farmers</h1>
-
-      {/* Wrapper for the table to allow overflow and scrolling */}
       <div className="h-[500px] overflow-y-scroll">
         <table className="hidden md:table table-auto w-full border border-collapse">
           <thead>
@@ -21,7 +39,7 @@ const FarmerTable = async () => {
             </tr>
           </thead>
           <tbody className="rounded-b-md">
-            {entries.map((entry) => (
+            {farmers.map((entry) => (
               <tr key={entry.id} className="rounded-b-md">
                 <td className="px-4 py-2 border border-gray-300 rounded-bl-md">
                   {entry.id}
@@ -33,8 +51,8 @@ const FarmerTable = async () => {
                   {entry.phoneNumber}
                 </td>
                 <td className="px-4 py-2 border border-gray-300">
-                  {entry.plotLocation?.map((loc) => (
-                    <span className="pr-2" key={loc}>
+                  {entry.plotLocation?.map((loc, index) => (
+                    <span className="pr-2" key={index}>
                       {loc}
                     </span>
                   ))}
@@ -46,10 +64,9 @@ const FarmerTable = async () => {
             ))}
           </tbody>
         </table>
-
         {/* Mobile-friendly stacked format */}
         <div className="md:hidden space-y-4">
-          {entries.map((entry) => (
+          {farmers.map((entry) => (
             <div
               key={entry.id}
               className="border border-gray-300 rounded-lg p-4 shadow-sm bg-white"
@@ -65,11 +82,7 @@ const FarmerTable = async () => {
               </p>
               <p>
                 <span className="font-bold">Plot Location:</span>{" "}
-                {entry.plotLocation?.map((loc) => (
-                  <span className="pr-2" key={loc}>
-                    {loc}
-                  </span>
-                ))}
+                {entry.plotLocation?.join(", ")}
               </p>
               <p>
                 <span className="font-bold">Number of Plots:</span>{" "}

@@ -1,8 +1,28 @@
-import React from "react";
-import prisma from "@/lib/prisma";
+"use client";
+import React, { useEffect, useState } from "react";
 
-const PalmTreesTable = async () => {
-  const entries = await prisma.palmTrees.findMany();
+const PalmTreesTable = () => {
+  const [palmTree, setPalmTree] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPalm = async () => {
+      try {
+        const response = await fetch("/api/palmtree");
+        const data = await response.json();
+        setPalmTree(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching farmers:", error);
+        setLoading(false);
+      }
+    };
+    fetchPalm();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <main className="w-full h-full container mx-auto">
@@ -19,7 +39,7 @@ const PalmTreesTable = async () => {
             </tr>
           </thead>
           <tbody>
-            {entries.map((entry) => (
+            {palmTree.map((entry) => (
               <tr key={entry.id}>
                 <td className="px-4 py-2 border border-gray-300">{entry.id}</td>
                 <td className="px-4 py-2 border border-gray-300">
@@ -35,7 +55,7 @@ const PalmTreesTable = async () => {
 
         {/* Mobile-friendly stacked format */}
         <div className="md:hidden space-y-4">
-          {entries.map((entry) => (
+          {palmTree.map((entry) => (
             <div
               key={entry.id}
               className="border border-gray-300 rounded-lg p-4 shadow-sm bg-white"
