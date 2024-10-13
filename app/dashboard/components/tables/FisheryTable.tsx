@@ -1,8 +1,17 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
+type Fishery = {
+  id: number;
+  typeOfFish: string;
+  numberOfPonds: number;
+  numberOfFishesPurchased: number;
+  costOfInvestment: number;
+  incomeOfSales: number;
+};
+
 const FisheryTable = () => {
-  const [fishery, setFishery] = useState([]);
+  const [fishery, setFishery] = useState<Fishery[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

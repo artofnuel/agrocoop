@@ -1,8 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
+type PalmTree = {
+  id: number;
+  name: string;
+  PalmTreesPlanted: number;
+};
+
 const PalmTreesTable = () => {
-  const [palmTree, setPalmTree] = useState([]);
+  const [palmTree, setPalmTree] = useState<PalmTree[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

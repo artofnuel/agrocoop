@@ -1,8 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
+type Farmer = {
+  id: number;
+  name: string;
+  phoneNumber: string;
+  plotLocation: string[];
+  numberOfPlots: number;
+};
+
 const FarmerTable = () => {
-  const [farmers, setFarmers] = useState([]);
+  const [farmers, setFarmers] = useState<Farmer[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
